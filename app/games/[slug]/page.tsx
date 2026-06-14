@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
-import { games } from "@/data/games";
-import GameDetailClient from "@/components/games/GameDetailClient";
+import GameDetailClient from "../../../components/games/GameDetailClient";
+import { games } from "../../../data/games";
 
-interface GameDetailPageProps {
-  params: Promise<{ slug: string }>;
-}
+type GameDetailPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return games.map((game) => ({
     slug: game.slug,
   }));
@@ -14,18 +16,28 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: GameDetailPageProps) {
   const { slug } = await params;
-  const game = games.find((g) => g.slug === slug);
-  if (!game) return { title: "Game Not Found" };
+  const game = games.find((item) => item.slug === slug);
+
+  if (!game) {
+    return {
+      title: "Game Not Found | NexusWager",
+      description: "The requested NexusWager game preview could not be found.",
+    };
+  }
+
   return {
-    title: `${game.title} — NexusWager Game Library`,
-    description: game.description,
+    title: `${game.title} | NexusWager Game Preview`,
+    description: game.shortDescription,
   };
 }
 
 export default async function GameDetailPage({ params }: GameDetailPageProps) {
   const { slug } = await params;
-  const game = games.find((g) => g.slug === slug);
-  if (!game) return notFound();
+  const game = games.find((item) => item.slug === slug);
+
+  if (!game) {
+    notFound();
+  }
 
   return <GameDetailClient game={game} />;
 }

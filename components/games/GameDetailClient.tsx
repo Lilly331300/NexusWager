@@ -1,25 +1,25 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
+  BadgeCheck,
   CheckCircle2,
-  Clock3,
-  Filter,
   Gamepad2,
   Layers3,
-  Search,
+  LockKeyhole,
   ShieldCheck,
-  Sparkles,
   Trophy,
   Wallet,
-  Zap,
 } from "lucide-react";
-import { games, gameStatuses, genres, type Game } from "@/data/games";
-import GlowButton from "@/components/shared/GlowButton";
+import GlowButton from "../shared/GlowButton";
+import { gameStatuses, type Game } from "../../data/games";
+
+type GameDetailClientProps = {
+  game: Game;
+};
 
 const statusStyles: Record<Game["status"], string> = {
   "coming-soon":
@@ -34,169 +34,8 @@ const statusStyles: Record<Game["status"], string> = {
     "border-fuchsia-300/20 bg-fuchsia-300/[0.08] text-fuchsia-200 shadow-[0_0_20px_rgba(217,70,239,0.08)]",
 };
 
-function getFilteredGames(selectedGenre: string, searchQuery: string) {
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-
-  return games.filter((game) => {
-    const matchesSearch =
-      !normalizedQuery ||
-      game.title.toLowerCase().includes(normalizedQuery) ||
-      game.genre.toLowerCase().includes(normalizedQuery) ||
-      game.developer.toLowerCase().includes(normalizedQuery) ||
-      game.tags.some((tag) => tag.toLowerCase().includes(normalizedQuery));
-
-    if (!matchesSearch) return false;
-
-    if (selectedGenre === "All") return true;
-
-    if (selectedGenre === "New") {
-      return ["coming-soon", "in-review", "partner-preview"].includes(game.status);
-    }
-
-    if (selectedGenre === "Trending") {
-      return ["early-access", "tournament-ready"].includes(game.status);
-    }
-
-    if (selectedGenre === "Free to Play") {
-      return game.freeToPlay;
-    }
-
-    if (selectedGenre === "Wager Enabled") {
-      return game.wagerEnabled;
-    }
-
-    return game.genre === selectedGenre;
-  });
-}
-
-function GameCard({ game, index }: { game: Game; index: number }) {
+export default function GameDetailClient({ game }: GameDetailClientProps) {
   const status = gameStatuses[game.status];
-
-  return (
-    <motion.article
-      initial={{ opacity: 0, y: 26 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{
-        duration: 0.55,
-        delay: index * 0.06,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      whileHover={{
-        y: -10,
-        scale: 1.018,
-        transition: { type: "spring", stiffness: 260, damping: 18 },
-      }}
-      className="group relative overflow-hidden rounded-[32px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.76)] shadow-[0_0_42px_rgba(168,85,247,0.08)] backdrop-blur-xl"
-    >
-      <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.2),transparent_48%)]" />
-      </div>
-
-      <div
-        className="relative h-[245px] overflow-hidden bg-[#11111A]"
-        style={{
-          backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.86),rgba(5,5,5,0.18)), url('${game.image}'), url('/assets/ui/final-cta-controller.webp')`,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-        }}
-      >
-        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          <span
-            className={`rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] backdrop-blur-md ${
-              statusStyles[game.status]
-            }`}
-          >
-            {status.label}
-          </span>
-
-          {game.freeToPlay && (
-            <span className="rounded-full border border-emerald-300/20 bg-emerald-300/[0.08] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200 backdrop-blur-md">
-              Free Access Concept
-            </span>
-          )}
-        </div>
-
-        <div className="absolute bottom-4 left-4 right-4">
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#C9A7FF]">
-            {game.genre}
-          </p>
-          <h3 className="text-3xl font-black uppercase leading-none text-white">
-            {game.title}
-          </h3>
-        </div>
-      </div>
-
-      <div className="relative p-5 sm:p-6">
-        <p className="text-sm leading-7 text-[#B9B9C7]">{game.shortDescription}</p>
-
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/42">
-              Player Mode
-            </p>
-            <p className="mt-1 text-sm font-bold text-white">{game.playerMode}</p>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/42">
-              Target Window
-            </p>
-            <p className="mt-1 text-sm font-bold text-white">{game.releaseDate}</p>
-          </div>
-        </div>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          {game.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-[rgba(168,85,247,0.14)] bg-[rgba(168,85,247,0.06)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#C9A7FF]"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-6 space-y-3">
-          {game.features.slice(0, 3).map((feature) => (
-            <div key={feature} className="flex items-center gap-3">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
-                <CheckCircle2 className="h-4 w-4" />
-              </div>
-              <p className="text-sm text-[#D7D7E2]">{feature}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link
-            href="/#waitlist"
-            className="group/btn inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#C9A7FF] px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition-transform duration-300 hover:scale-[1.02]"
-          >
-            Notify Me
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-          </Link>
-
-          <Link
-            href="/partners"
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[rgba(168,85,247,0.22)] bg-[rgba(168,85,247,0.06)] px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-[#DCC7FF] transition-all duration-300 hover:border-[rgba(168,85,247,0.42)] hover:bg-[rgba(168,85,247,0.12)]"
-          >
-            Partner Access
-          </Link>
-        </div>
-      </div>
-    </motion.article>
-  );
-}
-
-export default function GamesPageClient() {
-  const [selectedGenre, setSelectedGenre] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredGames = useMemo(
-    () => getFilteredGames(selectedGenre, searchQuery),
-    [selectedGenre, searchQuery]
-  );
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
@@ -208,47 +47,72 @@ export default function GamesPageClient() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto max-w-5xl text-center"
         >
           <Link
-            href="/"
+            href="/games"
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white/60 transition-colors duration-300 hover:border-[rgba(168,85,247,0.3)] hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back Home
+            Back to Games
           </Link>
 
-          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(168,85,247,0.1)] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C9A7FF]">
-            <Gamepad2 className="h-4 w-4" />
-            Game Worlds Preview
-          </div>
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div>
+              <div className="mb-5 flex flex-wrap items-center gap-3">
+                <span
+                  className={`rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] backdrop-blur-md ${
+                    statusStyles[game.status]
+                  }`}
+                >
+                  {status.label}
+                </span>
 
-          <h1
-            className="text-[clamp(3rem,8vw,6.8rem)] font-black uppercase leading-[0.88] tracking-[-0.04em]"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Explore the{" "}
-            <span className="bg-gradient-to-r from-[#C9A7FF] via-[#A855F7] to-[#E9D5FF] bg-clip-text text-transparent">
-              NexusWager
-            </span>{" "}
-            Game Layer
-          </h1>
+                <span className="rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(168,85,247,0.1)] px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#C9A7FF]">
+                  {game.genre}
+                </span>
+              </div>
 
-          <p className="mx-auto mt-6 max-w-3xl text-sm leading-7 text-[#B9B9C7] sm:text-base">
-            A preview of competitive game worlds, partner concepts, tournament
-            frameworks, and future experiences being prepared for the NexusWager
-            ecosystem.
-          </p>
+              <h1
+                className="text-[clamp(3.2rem,8vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                {game.title}
+              </h1>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <GlowButton href="/#waitlist" size="lg">
-              Join Waitlist
-              <ArrowUpRight className="h-5 w-5" />
-            </GlowButton>
+              <p className="mt-6 max-w-3xl text-sm leading-7 text-[#B9B9C7] sm:text-base">
+                {game.description}
+              </p>
 
-            <GlowButton href="/partners" variant="outline" size="lg">
-              Become a Partner
-            </GlowButton>
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                <GlowButton href="/waitlist" size="lg">
+                  Notify Me
+                  <ArrowUpRight className="h-5 w-5" />
+                </GlowButton>
+
+                <GlowButton href="/partners" variant="outline" size="lg">
+                  Partner Access
+                </GlowButton>
+              </div>
+            </div>
+
+            <div
+              className="min-h-[430px] overflow-hidden rounded-[40px] border border-[rgba(168,85,247,0.18)] bg-[#11111A] shadow-[0_0_60px_rgba(168,85,247,0.12)]"
+              style={{
+                backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.86),rgba(5,5,5,0.08)), url('${game.image}'), url('/assets/ui/final-cta-controller.webp')`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+              }}
+            >
+              <div className="flex min-h-[430px] flex-col justify-end p-6">
+                <div className="w-fit rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(5,5,5,0.58)] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#DCC7FF] backdrop-blur-md">
+                  Concept Visual
+                </div>
+
+                <h2 className="mt-4 max-w-md text-3xl font-black uppercase leading-tight text-white">
+                  Competitive game world preview
+                </h2>
+              </div>
+            </div>
           </div>
         </motion.div>
 
@@ -256,23 +120,23 @@ export default function GamesPageClient() {
           {[
             {
               icon: Gamepad2,
-              value: `${games.length}`,
-              label: "Preview Worlds",
-            },
-            {
-              icon: Wallet,
-              value: "Escrow",
-              label: "Secure Match Flow",
-            },
-            {
-              icon: ShieldCheck,
-              value: "SDK",
-              label: "Gateway Planned",
+              value: game.playerMode,
+              label: "Player Mode",
             },
             {
               icon: Trophy,
-              value: "Events",
-              label: "Tournament Framework",
+              value: game.tournamentReady ? "Planned" : "Review",
+              label: "Tournament Layer",
+            },
+            {
+              icon: Wallet,
+              value: game.wagerEnabled ? "Planned" : "Not Set",
+              label: "Wager Flow",
+            },
+            {
+              icon: BadgeCheck,
+              value: game.releaseDate,
+              label: "Target Window",
             },
           ].map((item, index) => {
             const Icon = item.icon;
@@ -301,95 +165,103 @@ export default function GamesPageClient() {
           })}
         </div>
 
-        <div className="mt-14 rounded-[34px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.58)] p-4 shadow-[0_0_46px_rgba(168,85,247,0.08)] backdrop-blur-xl sm:p-5">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
-                <Filter className="h-5 w-5" />
-              </div>
-
-              <div>
-                <p className="text-sm font-black uppercase tracking-[0.16em] text-white">
-                  Filter Game Concepts
-                </p>
-                <p className="mt-1 text-xs text-white/45">
-                  Search by genre, title, developer, status, or feature.
-                </p>
-              </div>
-            </div>
-
-            <div className="relative w-full lg:max-w-[340px]">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
-              <input
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Search games..."
-                className="h-12 w-full rounded-full border border-white/10 bg-white/[0.045] pl-11 pr-4 text-sm text-white outline-none transition-all duration-300 placeholder:text-white/35 focus:border-[rgba(168,85,247,0.38)] focus:bg-white/[0.07]"
-              />
-            </div>
-          </div>
-
-          <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
-            {genres.map((genre) => (
-              <button
-                key={genre}
-                type="button"
-                onClick={() => setSelectedGenre(genre)}
-                className={`min-w-fit rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-[0.14em] transition-all duration-300 ${
-                  selectedGenre === genre
-                    ? "border-[#C9A7FF]/45 bg-[#C9A7FF]/16 text-[#F1E7FF]"
-                    : "border-white/10 bg-white/[0.035] text-white/48 hover:border-[rgba(168,85,247,0.28)] hover:text-white"
-                }`}
-              >
-                {genre}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {filteredGames.map((game, index) => (
-            <GameCard key={game.id} game={game} index={index} />
-          ))}
-        </div>
-
-        {filteredGames.length === 0 && (
-          <div className="mt-12 rounded-[30px] border border-white/10 bg-white/[0.035] p-10 text-center">
-            <Sparkles className="mx-auto mb-4 h-8 w-8 text-[#C9A7FF]" />
-            <h3 className="text-2xl font-black text-white">No game concepts found</h3>
-            <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-white/55">
-              Try a different filter or search term to explore more NexusWager game
-              world previews.
+        <section className="mt-20 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="rounded-[34px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.62)] p-6 shadow-[0_0_50px_rgba(168,85,247,0.08)] backdrop-blur-xl sm:p-8">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
+              Game Overview
             </p>
-          </div>
-        )}
 
-        <div className="mt-16 overflow-hidden rounded-[38px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.72)] p-6 shadow-[0_0_50px_rgba(168,85,247,0.1)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
+              Built for future competitive sessions
+            </h2>
+
+            <p className="mt-4 text-sm leading-7 text-[#B9B9C7]">
+              This page is a preview for the {game.title} game world inside the
+              NexusWager ecosystem. It does not represent a live game, live player
+              count, active ranking system, or running tournament.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              {game.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-[rgba(168,85,247,0.14)] bg-[rgba(168,85,247,0.06)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#C9A7FF]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-4">
+            <div className="rounded-[30px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.64)] p-6 backdrop-blur-xl">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
+                <Layers3 className="h-5 w-5" />
+              </div>
+
+              <h3 className="text-2xl font-black text-white">
+                Competitive Modes
+              </h3>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {game.competitiveModes.map((mode) => (
+                  <div
+                    key={mode}
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-3"
+                  >
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#C9A7FF]" />
+                    <p className="text-sm text-white/68">{mode}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-[30px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.64)] p-6 backdrop-blur-xl">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+
+              <h3 className="text-2xl font-black text-white">Planned Features</h3>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {game.features.map((feature) => (
+                  <div
+                    key={feature}
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-3"
+                  >
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#C9A7FF]" />
+                    <p className="text-sm text-white/68">{feature}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-20 overflow-hidden rounded-[38px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.72)] p-6 shadow-[0_0_50px_rgba(168,85,247,0.1)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
-                Partner Game Pipeline
+                Launch Readiness
               </p>
 
               <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
-                Bring your game into the NexusWager ecosystem
+                Follow this game world as the ecosystem develops
               </h2>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-[#B9B9C7] sm:text-base">
-                NexusWager is preparing a structured pathway for independent
-                developers, studios, publishers, and strategic partners to integrate
-                competitive game experiences through a controlled review and
-                integration pipeline.
+                Join the waitlist to follow NexusWager game previews, partner
+                updates, wallet progress, and future platform launch announcements.
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <GlowButton href="/partners" size="lg">
-                  Explore Partner Access
+                <GlowButton href="/waitlist" size="lg">
+                  Join Waitlist
                   <ArrowUpRight className="h-5 w-5" />
                 </GlowButton>
 
-                <GlowButton href="/blog" variant="outline" size="lg">
-                  Read Ecosystem Blog
+                <GlowButton href="/games" variant="outline" size="lg">
+                  View All Games
                 </GlowButton>
               </div>
             </div>
@@ -397,19 +269,19 @@ export default function GamesPageClient() {
             <div className="grid gap-3">
               {[
                 {
-                  icon: Layers3,
-                  title: "Integration Center",
-                  text: "A future structured environment for onboarding game concepts and partner builds.",
+                  icon: LockKeyhole,
+                  title: "Escrow Flow",
+                  text: "Designed for future supported matches with secure settlement logic.",
                 },
                 {
-                  icon: Clock3,
-                  title: "Review Pipeline",
-                  text: "Concepts move through screening, compatibility checks, and ecosystem alignment.",
+                  icon: Trophy,
+                  title: "Tournament Framework",
+                  text: "Prepared for structured events, brackets, and seasonal competition concepts.",
                 },
                 {
-                  icon: Zap,
-                  title: "Visibility Framework",
-                  text: "Approved concepts can receive platform visibility, community exposure, and event consideration.",
+                  icon: ShieldCheck,
+                  title: "Review Layer",
+                  text: "Game access depends on future testing, integration checks, and platform approval.",
                 },
               ].map((item) => {
                 const Icon = item.icon;
@@ -432,7 +304,7 @@ export default function GamesPageClient() {
               })}
             </div>
           </div>
-        </div>
+        </section>
       </section>
     </main>
   );
