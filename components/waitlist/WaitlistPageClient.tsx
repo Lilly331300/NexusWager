@@ -12,7 +12,6 @@ import {
   Gamepad2,
   Handshake,
   Layers3,
-  Mail,
   Rocket,
   ShieldCheck,
   Sparkles,

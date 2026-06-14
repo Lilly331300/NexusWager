@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   CalendarDays,
   Clock3,
-  Gamepad2,
   Newspaper,
   Radio,
   Rocket,
