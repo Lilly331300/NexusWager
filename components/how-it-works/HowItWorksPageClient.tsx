@@ -6,48 +6,59 @@ import {
   ArrowLeft,
   ArrowUpRight,
   BadgeCheck,
-  Braces,
-  CheckCircle2,
   Gamepad2,
-  GitBranch,
-  Handshake,
   Layers3,
   LockKeyhole,
   Network,
   Rocket,
   ShieldCheck,
-  Sparkles,
   Trophy,
   Users,
   Wallet,
 } from "lucide-react";
 import GlowButton from "../shared/GlowButton";
-import {
-  ecosystemLayers,
-  howSteps,
-  userPaths,
-} from "../../data/howItWorks";
 
-const stepIcons = [
-  Gamepad2,
-  Users,
-  Trophy,
-  LockKeyhole,
-  Braces,
-  ShieldCheck,
-  Wallet,
+const steps = [
+  {
+    title: "Discover Game Worlds",
+    text: "Players explore NexusWager game concepts, partner previews, community updates, and future competitive experiences.",
+    icon: Gamepad2,
+  },
+  {
+    title: "Join the Ecosystem",
+    text: "Players, developers, and partners enter through waitlist, partner interest, or future account access.",
+    icon: Users,
+  },
+  {
+    title: "Choose a Match Format",
+    text: "Future supported games can offer practice modes, competitive duels, tournaments, and seasonal formats.",
+    icon: Trophy,
+  },
+  {
+    title: "Secure Match Flow",
+    text: "For supported formats, the escrow layer is planned to protect match value until results are verified.",
+    icon: LockKeyhole,
+  },
+  {
+    title: "Verify the Outcome",
+    text: "Results can be checked through game integration, platform rules, backend systems, and admin review.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Settle Activity",
+    text: "Wallet records, rewards, history, and future rankings can update after verification.",
+    icon: Wallet,
+  },
 ];
 
-const layerIcons = [
-  Gamepad2,
-  Network,
-  GitBranch,
-  Wallet,
-  ShieldCheck,
-  Users,
+const walletPoints = [
+  "Wallet account layer",
+  "Escrow-backed match flow",
+  "Nexus coin utility preview",
+  "Reward and settlement history",
+  "Partner campaign support",
+  "Future transaction records",
 ];
-
-const pathIcons = [Gamepad2, Braces, Handshake];
 
 export default function HowItWorksPageClient() {
   return (
@@ -72,23 +83,23 @@ export default function HowItWorksPageClient() {
 
           <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(168,85,247,0.1)] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C9A7FF]">
             <Layers3 className="h-4 w-4" />
-            How NexusWager Works
+            How It Works
           </div>
 
           <h1
-            className="text-[clamp(3rem,8vw,6.8rem)] font-black uppercase leading-[0.88] tracking-[-0.04em]"
+            className="text-[clamp(3rem,8vw,6.8rem)] font-black leading-[0.88] tracking-[-0.06em]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            One Ecosystem for{" "}
+            Play, Connect, Compete — All Inside the{" "}
             <span className="bg-gradient-to-r from-[#C9A7FF] via-[#A855F7] to-[#E9D5FF] bg-clip-text text-transparent">
-              Competitive Gaming
+              Nexus
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-sm leading-7 text-[#B9B9C7] sm:text-base">
-            NexusWager is being designed as a connected platform where players,
-            games, developers, wallets, escrow, matchmaking, tournaments, and
-            community activity can work together inside one ecosystem.
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-[#B9B9C7]">
+            NexusWager is being designed as one playful but powerful ecosystem for
+            game discovery, partner integrations, wallet systems, escrow flow,
+            tournaments, and community growth.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -97,201 +108,32 @@ export default function HowItWorksPageClient() {
               <ArrowUpRight className="h-5 w-5" />
             </GlowButton>
 
-            <GlowButton href="/wallet" variant="outline" size="lg">
-              View Wallet Layer
+            <GlowButton href="/waitlist" variant="outline" size="lg">
+              Join Waitlist
             </GlowButton>
           </div>
         </motion.div>
-
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              icon: Gamepad2,
-              value: "Games",
-              label: "Discovery Layer",
-            },
-            {
-              icon: Network,
-              value: "Gateway",
-              label: "Integration Layer",
-            },
-            {
-              icon: LockKeyhole,
-              value: "Escrow",
-              label: "Trust Layer",
-            },
-            {
-              icon: Users,
-              value: "Community",
-              label: "Growth Layer",
-            },
-          ].map((item, index) => {
-            const Icon = item.icon;
-
-            return (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: index * 0.08 }}
-                className="rounded-[28px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.64)] p-5 backdrop-blur-xl"
-              >
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
-                  <Icon className="h-5 w-5" />
-                </div>
-
-                <p className="text-2xl font-black uppercase text-white">
-                  {item.value}
-                </p>
-                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white/45">
-                  {item.label}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
 
         <section className="mt-20">
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
               Player Flow
             </p>
-
-            <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
-              From game discovery to future settlement
+            <h2
+              className="mt-3 text-4xl font-black leading-tight text-white sm:text-5xl"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              From first click to future competition.
             </h2>
-
-            <p className="mt-4 text-sm leading-7 text-[#B9B9C7] sm:text-base">
-              This is a simplified preview of how a player journey could work once
-              the NexusWager platform is live and connected to backend systems,
-              game integrations, wallet logic, and verification tools.
-            </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-7">
-            {howSteps.map((step, index) => {
-              const Icon = stepIcons[index] ?? Sparkles;
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
 
               return (
                 <motion.article
-                  key={step.stage}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{
-                    duration: 0.5,
-                    delay: index * 0.05,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="rounded-[28px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.64)] p-5 backdrop-blur-xl"
-                >
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
-                    <Icon className="h-6 w-6" />
-                  </div>
-
-                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#C9A7FF]">
-                    Step {step.stage}
-                  </p>
-
-                  <h3 className="mt-2 text-xl font-black leading-tight text-white">
-                    {step.title}
-                  </h3>
-
-                  <p className="mt-3 text-sm leading-7 text-[#B9B9C7]">
-                    {step.description}
-                  </p>
-                </motion.article>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="mt-20 overflow-hidden rounded-[38px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.72)] p-6 shadow-[0_0_50px_rgba(168,85,247,0.1)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
-                Ecosystem Architecture
-              </p>
-
-              <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
-                Multiple layers working together
-              </h2>
-
-              <p className="mt-4 text-sm leading-7 text-[#B9B9C7] sm:text-base">
-                NexusWager is not only a game listing site. The planned platform
-                combines account identity, game discovery, wallet tools, escrow,
-                developer integration, community features, and admin review systems.
-              </p>
-
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <GlowButton href="/partners" size="lg">
-                  Partner With Us
-                  <ArrowUpRight className="h-5 w-5" />
-                </GlowButton>
-
-                <GlowButton href="/blog" variant="outline" size="lg">
-                  Read Blog
-                </GlowButton>
-              </div>
-            </div>
-
-            <div className="grid gap-3 md:grid-cols-2">
-              {ecosystemLayers.map((layer, index) => {
-                const Icon = layerIcons[index] ?? Layers3;
-
-                return (
-                  <motion.div
-                    key={layer.title}
-                    initial={{ opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: 0.45,
-                      delay: index * 0.05,
-                    }}
-                    className="rounded-[24px] border border-white/10 bg-white/[0.035] p-4"
-                  >
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
-                      <Icon className="h-5 w-5" />
-                    </div>
-
-                    <h3 className="font-bold text-white">{layer.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-white/55">
-                      {layer.description}
-                    </p>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-20">
-          <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
-                User Paths
-              </p>
-
-              <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
-                Built for players, developers, and partners
-              </h2>
-            </div>
-
-            <p className="max-w-xl text-sm leading-7 text-[#B9B9C7]">
-              Each group enters NexusWager differently, but all paths connect into
-              the same competitive gaming ecosystem.
-            </p>
-          </div>
-
-          <div className="grid gap-5 lg:grid-cols-3">
-            {userPaths.map((path, index) => {
-              const Icon = pathIcons[index] ?? BadgeCheck;
-
-              return (
-                <motion.article
-                  key={path.title}
+                  key={step.title}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-80px" }}
@@ -300,104 +142,102 @@ export default function HowItWorksPageClient() {
                     delay: index * 0.07,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  whileHover={{
-                    y: -8,
-                    scale: 1.015,
-                    transition: { type: "spring", stiffness: 260, damping: 18 },
-                  }}
                   className="rounded-[30px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.72)] p-6 shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl"
                 >
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
                     <Icon className="h-6 w-6" />
                   </div>
 
-                  <h3 className="text-2xl font-black text-white">{path.title}</h3>
-
-                  <p className="mt-4 text-sm leading-7 text-[#B9B9C7]">
-                    {path.description}
+                  <p className="mb-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#C9A7FF]">
+                    Step {String(index + 1).padStart(2, "0")}
                   </p>
 
-                  <div className="mt-5 space-y-3">
-                    {path.points.map((point) => (
-                      <div key={point} className="flex items-center gap-3">
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-[#C9A7FF]" />
-                        <p className="text-sm text-white/68">{point}</p>
-                      </div>
-                    ))}
-                  </div>
+                  <h3 className="text-2xl font-black leading-tight text-white">
+                    {step.title}
+                  </h3>
+
+                  <p className="mt-4 text-sm leading-7 text-[#B9B9C7]">
+                    {step.text}
+                  </p>
                 </motion.article>
               );
             })}
           </div>
         </section>
 
-        <section className="mt-20 overflow-hidden rounded-[38px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.72)] p-6 shadow-[0_0_50px_rgba(168,85,247,0.1)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <section className="mt-20 overflow-hidden rounded-[42px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.72)] p-6 shadow-[0_0_60px_rgba(168,85,247,0.12)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
-                Launch Direction
-              </p>
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(168,85,247,0.1)] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
+                <Wallet className="h-4 w-4" />
+                Wallet Under the Hood
+              </div>
 
-              <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
-                The system is being prepared step by step
+              <h2
+                className="text-4xl font-black leading-tight text-white sm:text-5xl"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                The wallet is not just a page — it is part of how the platform works.
               </h2>
 
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-[#B9B9C7] sm:text-base">
-                The current website introduces the vision. Future phases can connect
-                backend accounts, real waitlist collection, wallet logic, partner
-                submissions, admin dashboards, game SDK flows, and community systems.
+              <p className="mt-5 text-sm leading-7 text-[#B9B9C7] sm:text-base">
+                The wallet layer is planned to support account activity, future coin
+                utility, escrow-backed competition, reward settlement, and partner
+                campaigns. It now lives conceptually under How It Works instead of
+                sitting as a separate main navigation item.
               </p>
-
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <GlowButton href="/#waitlist" size="lg">
-                  Join Waitlist
-                  <ArrowUpRight className="h-5 w-5" />
-                </GlowButton>
-
-                <GlowButton href="/news" variant="outline" size="lg">
-                  Read Updates
-                </GlowButton>
-              </div>
             </div>
 
-            <div className="grid gap-3">
-              {[
-                {
-                  icon: Rocket,
-                  title: "Website Foundation",
-                  text: "Introduce the project, show the ecosystem, and collect early interest.",
-                },
-                {
-                  icon: Braces,
-                  title: "Integration Phase",
-                  text: "Prepare game SDK, developer onboarding, and partner review workflows.",
-                },
-                {
-                  icon: ShieldCheck,
-                  title: "Secure Platform Layer",
-                  text: "Build account, wallet, verification, escrow, and admin control systems.",
-                },
-              ].map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <div
-                    key={item.title}
-                    className="rounded-[24px] border border-white/10 bg-white/[0.035] p-4"
-                  >
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
-                      <Icon className="h-5 w-5" />
-                    </div>
-
-                    <h3 className="font-bold text-white">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-white/55">
-                      {item.text}
-                    </p>
-                  </div>
-                );
-              })}
+            <div className="grid gap-3 sm:grid-cols-2">
+              {walletPoints.map((point) => (
+                <div
+                  key={point}
+                  className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-4"
+                >
+                  <BadgeCheck className="h-5 w-5 shrink-0 text-[#C9A7FF]" />
+                  <p className="text-sm font-bold text-white/72">{point}</p>
+                </div>
+              ))}
             </div>
           </div>
+        </section>
+
+        <section className="mt-20 grid gap-5 md:grid-cols-3">
+          {[
+            {
+              icon: Network,
+              title: "Game Gateway",
+              text: "Approved games can connect to the future NexusWager ecosystem through planned integration layers.",
+            },
+            {
+              icon: Rocket,
+              title: "Launch Path",
+              text: "The website introduces the vision before backend accounts, payments, and live systems are connected.",
+            },
+            {
+              icon: Trophy,
+              title: "Competition Layer",
+              text: "Tournaments, rankings, match records, and reward systems are planned as future framework layers.",
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <div
+                key={item.title}
+                className="rounded-[30px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.64)] p-6 backdrop-blur-xl"
+              >
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
+                  <Icon className="h-6 w-6" />
+                </div>
+
+                <h3 className="text-2xl font-black text-white">{item.title}</h3>
+                <p className="mt-4 text-sm leading-7 text-[#B9B9C7]">
+                  {item.text}
+                </p>
+              </div>
+            );
+          })}
         </section>
       </section>
     </main>

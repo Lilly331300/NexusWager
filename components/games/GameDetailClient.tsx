@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -8,6 +9,7 @@ import {
   BadgeCheck,
   CheckCircle2,
   Gamepad2,
+  ImageIcon,
   Layers3,
   LockKeyhole,
   ShieldCheck,
@@ -15,7 +17,7 @@ import {
   Wallet,
 } from "lucide-react";
 import GlowButton from "../shared/GlowButton";
-import { gameStatuses, type Game } from "../../data/games";
+import { games, gameStatuses, type Game } from "../../data/games";
 
 type GameDetailClientProps = {
   game: Game;
@@ -36,6 +38,14 @@ const statusStyles: Record<Game["status"], string> = {
 
 export default function GameDetailClient({ game }: GameDetailClientProps) {
   const status = gameStatuses[game.status];
+
+  const gallery = game.screenshots.length > 0 ? game.screenshots : [game.image];
+  const [selectedImage, setSelectedImage] = useState(gallery[0]);
+
+  const relatedGames = useMemo(
+    () => games.filter((item) => game.relatedGames.includes(item.slug)),
+    [game.relatedGames]
+  );
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
@@ -95,22 +105,46 @@ export default function GameDetailClient({ game }: GameDetailClientProps) {
               </div>
             </div>
 
-            <div
-              className="min-h-[430px] overflow-hidden rounded-[40px] border border-[rgba(168,85,247,0.18)] bg-[#11111A] shadow-[0_0_60px_rgba(168,85,247,0.12)]"
-              style={{
-                backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.86),rgba(5,5,5,0.08)), url('${game.image}'), url('/assets/ui/final-cta-controller.webp')`,
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-              }}
-            >
-              <div className="flex min-h-[430px] flex-col justify-end p-6">
-                <div className="w-fit rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(5,5,5,0.58)] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#DCC7FF] backdrop-blur-md">
-                  Concept Visual
-                </div>
+            <div className="overflow-hidden rounded-[40px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.74)] p-3 shadow-[0_0_60px_rgba(168,85,247,0.12)] backdrop-blur-xl">
+              <div
+                className="min-h-[430px] rounded-[32px] bg-[#11111A]"
+                style={{
+                  backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.86),rgba(5,5,5,0.08)), url('${selectedImage}'), url('${game.image}')`,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
+              >
+                <div className="flex min-h-[430px] flex-col justify-end p-6">
+                  <div className="w-fit rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(5,5,5,0.58)] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#DCC7FF] backdrop-blur-md">
+                    Concept Visual
+                  </div>
 
-                <h2 className="mt-4 max-w-md text-3xl font-black uppercase leading-tight text-white">
-                  Competitive game world preview
-                </h2>
+                  <h2 className="mt-4 max-w-md text-3xl font-black uppercase leading-tight text-white">
+                    Game world preview
+                  </h2>
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-3">
+                {gallery.map((image) => (
+                  <button
+                    key={image}
+                    type="button"
+                    onClick={() => setSelectedImage(image)}
+                    className={`h-24 rounded-2xl border bg-[#11111A] transition-all duration-300 ${
+                      selectedImage === image
+                        ? "border-[#C9A7FF]/70"
+                        : "border-white/10 hover:border-[#C9A7FF]/35"
+                    }`}
+                    style={{
+                      backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.55),rgba(5,5,5,0.04)), url('${image}')`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <span className="sr-only">View screenshot</span>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -237,6 +271,109 @@ export default function GameDetailClient({ game }: GameDetailClientProps) {
             </div>
           </div>
         </section>
+
+        <section className="mt-20">
+          <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
+                Screenshot Preview
+              </p>
+              <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
+                Visual concept gallery
+              </h2>
+            </div>
+
+            <p className="max-w-xl text-sm leading-7 text-[#B9B9C7]">
+              These visuals are concept assets from the project folder and can be
+              replaced with final screenshots after game integration.
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {gallery.map((image, index) => (
+              <motion.div
+                key={`${image}-${index}`}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{
+                  duration: 0.52,
+                  delay: index * 0.07,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="min-h-[260px] rounded-[30px] border border-[rgba(168,85,247,0.16)] bg-[#11111A] p-4"
+                style={{
+                  backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.78),rgba(5,5,5,0.1)), url('${image}')`,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
+              >
+                <div className="flex h-full min-h-[230px] flex-col justify-end">
+                  <div className="flex w-fit items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white/70 backdrop-blur-md">
+                    <ImageIcon className="h-3.5 w-3.5 text-[#C9A7FF]" />
+                    Screenshot {index + 1}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {relatedGames.length > 0 && (
+          <section className="mt-20">
+            <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-[#C9A7FF]">
+                  Related Game Worlds
+                </p>
+                <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-white sm:text-4xl">
+                  Explore more previews
+                </h2>
+              </div>
+
+              <Link
+                href="/games"
+                className="group inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(168,85,247,0.28)] bg-[rgba(168,85,247,0.08)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[#C9A7FF] transition-all duration-300 hover:border-[rgba(168,85,247,0.45)] hover:bg-[rgba(168,85,247,0.14)]"
+              >
+                View all games
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-3">
+              {relatedGames.map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/games/${item.slug}`}
+                  className="group overflow-hidden rounded-[30px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.72)] shadow-[0_0_40px_rgba(168,85,247,0.08)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-2"
+                >
+                  <div
+                    className="h-[210px] bg-[#11111A]"
+                    style={{
+                      backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.82),rgba(5,5,5,0.12)), url('${item.image}')`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  />
+
+                  <div className="p-5">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#C9A7FF]">
+                      {item.genre}
+                    </p>
+
+                    <h3 className="mt-2 text-2xl font-black text-white">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-3 text-sm leading-7 text-[#B9B9C7]">
+                      {item.shortDescription}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mt-20 overflow-hidden rounded-[38px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.72)] p-6 shadow-[0_0_50px_rgba(168,85,247,0.1)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">

@@ -1,279 +1,223 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
-  ArrowRight,
-  Bell,
-  Eye,
+  ArrowUpRight,
+  CheckCircle2,
   Gamepad2,
-  Sparkles,
+  Layers3,
+  Trophy,
+  Wallet,
 } from "lucide-react";
-import { games } from "@/data/games";
+import { games, gameStatuses, type Game } from "../../data/games";
 
-const filters = [
-  "All",
-  "Action",
-  "Strategy",
-  "Sports",
-  "Racing",
-  "Partner Concepts",
-  "Tournament Concepts",
-  "Free Access Concepts",
-];
-
-const conceptStatusMap = {
-  "coming-soon": {
-    label: "Concept Preview",
-    className:
-      "border-[rgba(177,0,255,0.34)] bg-[rgba(177,0,255,0.16)] text-[#D447FF]",
-  },
-  "in-review": {
-    label: "In Development",
-    className:
-      "border-[rgba(255,193,7,0.34)] bg-[rgba(255,193,7,0.14)] text-[#FFC107]",
-  },
-  "early-access": {
-    label: "Launch Candidate",
-    className:
-      "border-[rgba(0,230,118,0.3)] bg-[rgba(0,230,118,0.12)] text-[#00E676]",
-  },
-  "tournament-ready": {
-    label: "Tournament Concept",
-    className:
-      "border-[rgba(212,71,255,0.34)] bg-[rgba(212,71,255,0.14)] text-[#D447FF]",
-  },
-  "partner-preview": {
-    label: "Partner Slot",
-    className:
-      "border-[rgba(240,92,255,0.34)] bg-[rgba(240,92,255,0.14)] text-[#F05CFF]",
-  },
+const statusStyles: Record<Game["status"], string> = {
+  "coming-soon":
+    "border-white/10 bg-white/[0.05] text-white/72 shadow-[0_0_20px_rgba(255,255,255,0.04)]",
+  "in-review":
+    "border-amber-300/20 bg-amber-300/[0.08] text-amber-200 shadow-[0_0_20px_rgba(251,191,36,0.08)]",
+  "early-access":
+    "border-cyan-300/20 bg-cyan-300/[0.08] text-cyan-200 shadow-[0_0_20px_rgba(34,211,238,0.08)]",
+  "tournament-ready":
+    "border-[#C9A7FF]/25 bg-[#C9A7FF]/10 text-[#E9D5FF] shadow-[0_0_24px_rgba(201,167,255,0.12)]",
+  "partner-preview":
+    "border-fuchsia-300/20 bg-fuchsia-300/[0.08] text-fuchsia-200 shadow-[0_0_20px_rgba(217,70,239,0.08)]",
 };
 
-const filterGame = (game: (typeof games)[number], active: string) => {
-  if (active === "All") return true;
-
-  if (["Action", "Strategy", "Sports", "Racing"].includes(active)) {
-    return game.genre === active;
-  }
-
-  if (active === "Partner Concepts") {
-    return game.status === "partner-preview" || game.status === "in-review";
-  }
-
-  if (active === "Tournament Concepts") {
-    return game.tournamentReady || game.status === "tournament-ready";
-  }
-
-  if (active === "Free Access Concepts") {
-    return game.freeToPlay;
-  }
-
-  return true;
-};
-
-export default function FeaturedGames() {
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  const filteredGames = useMemo(() => {
-    return games.filter((game) => filterGame(game, activeFilter)).slice(0, 5);
-  }, [activeFilter]);
+function FeaturedGameCard({ game, index }: { game: Game; index: number }) {
+  const status = gameStatuses[game.status];
 
   return (
-    <section className="relative overflow-hidden py-8 lg:py-10">
-      <div className="absolute inset-0 bg-[#050505]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(177,0,255,0.07),transparent_30%)]" />
+    <motion.article
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{
+        duration: 0.55,
+        delay: index * 0.06,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      whileHover={{
+        y: -10,
+        scale: 1.018,
+        transition: { type: "spring", stiffness: 260, damping: 18 },
+      }}
+      className="group relative overflow-hidden rounded-[32px] border border-[rgba(168,85,247,0.16)] bg-[rgba(10,10,16,0.76)] shadow-[0_0_42px_rgba(168,85,247,0.08)] backdrop-blur-xl"
+    >
+      <Link href={`/games/${game.slug}`} className="absolute inset-0 z-20">
+        <span className="sr-only">View {game.title} details</span>
+      </Link>
+
+      <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.2),transparent_48%)]" />
+      </div>
+
+      <div
+        className="relative h-[245px] overflow-hidden bg-[#11111A]"
+        style={{
+          backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.86),rgba(5,5,5,0.18)), url('${game.image}'), url('/assets/ui/final-cta-controller.webp')`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
+      >
+        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+          <span
+            className={`rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] backdrop-blur-md ${
+              statusStyles[game.status]
+            }`}
+          >
+            {status.label}
+          </span>
+
+          {game.freeToPlay && (
+            <span className="rounded-full border border-emerald-300/20 bg-emerald-300/[0.08] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200 backdrop-blur-md">
+              Free Access Concept
+            </span>
+          )}
+        </div>
+
+        <div className="absolute bottom-4 left-4 right-4">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#C9A7FF]">
+            {game.genre}
+          </p>
+
+          <h3 className="text-3xl font-black uppercase leading-none text-white">
+            {game.title}
+          </h3>
+        </div>
+      </div>
+
+      <div className="relative p-5 sm:p-6">
+        <p className="text-sm leading-7 text-[#B9B9C7]">
+          {game.shortDescription}
+        </p>
+
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/42">
+              Player Mode
+            </p>
+            <p className="mt-1 text-sm font-bold text-white">{game.playerMode}</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/42">
+              Target
+            </p>
+            <p className="mt-1 text-sm font-bold text-white">{game.releaseDate}</p>
+          </div>
+        </div>
+
+        <div className="mt-5 space-y-3">
+          {game.features.slice(0, 2).map((feature) => (
+            <div key={feature} className="flex items-center gap-3">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
+                <CheckCircle2 className="h-4 w-4" />
+              </div>
+              <p className="text-sm text-[#D7D7E2]">{feature}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="relative z-30 mt-6 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href={`/games/${game.slug}`}
+            className="group/btn inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#C9A7FF] px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition-transform duration-300 hover:scale-[1.02]"
+          >
+            View Details
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+          </Link>
+
+          <Link
+            href="/waitlist"
+            className="inline-flex flex-1 items-center justify-center rounded-full border border-[rgba(168,85,247,0.22)] bg-[rgba(168,85,247,0.06)] px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-[#DCC7FF] transition-all duration-300 hover:border-[rgba(168,85,247,0.42)] hover:bg-[rgba(168,85,247,0.12)]"
+          >
+            Notify Me
+          </Link>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+export default function FeaturedGames() {
+  return (
+    <section id="games" className="relative overflow-hidden bg-[#050505] py-20 text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_6%,rgba(168,85,247,0.14),transparent_28%),radial-gradient(circle_at_82%_20%,rgba(217,70,239,0.1),transparent_30%)]" />
 
       <div className="container-narrow relative z-10">
-        <div className="mb-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-10 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
           <div className="max-w-3xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[rgba(177,0,255,0.26)] bg-[rgba(177,0,255,0.1)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#D447FF]">
-              <Sparkles className="h-4 w-4" />
-              Concept Game Library
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[rgba(168,85,247,0.24)] bg-[rgba(168,85,247,0.1)] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C9A7FF]">
+              <Gamepad2 className="h-4 w-4" />
+              Game Worlds Preview
             </div>
 
             <h2
-              className="text-2xl font-black uppercase tracking-[0.04em] text-white md:text-3xl"
+              className="text-[clamp(2.4rem,5vw,4.6rem)] font-black uppercase leading-[0.92] tracking-[-0.04em]"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              Game Worlds Preview
+              Competitive game worlds being prepared for the Nexus
             </h2>
 
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-[#A8A8B8] md:text-base">
-              A cinematic preview of the competitive experiences NexusWager is
-              being built to support. These are concept worlds and ecosystem
-              previews, not live playable games yet. Final partner titles and
-              launch games will be announced as onboarding and development
-              progress.
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-[#B9B9C7] sm:text-base">
+              Explore future game concepts, partner slots, tournament frameworks,
+              and competitive experiences designed for the NexusWager ecosystem.
             </p>
           </div>
 
           <Link
             href="/games"
-            className="inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(177,0,255,0.18)] bg-[rgba(255,255,255,0.025)] px-4 py-2.5 text-sm font-semibold text-[#D447FF] transition-all hover:border-[rgba(177,0,255,0.36)] hover:text-[#F05CFF]"
+            className="group inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(168,85,247,0.28)] bg-[rgba(168,85,247,0.08)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[#C9A7FF] transition-all duration-300 hover:border-[rgba(168,85,247,0.45)] hover:bg-[rgba(168,85,247,0.14)]"
           >
-            Explore Concepts
-            <ArrowRight className="h-4 w-4" />
+            View all games
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
 
-        <div className="mb-5 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`shrink-0 rounded-lg border px-4 py-2 text-xs font-semibold transition-all duration-300 ${
-                activeFilter === filter
-                  ? "border-[rgba(177,0,255,0.45)] bg-gradient-to-r from-[#B100FF] to-[#D447FF] text-white shadow-[0_0_22px_rgba(177,0,255,0.2)]"
-                  : "border-[rgba(177,0,255,0.16)] bg-[rgba(17,17,26,0.55)] text-[#A8A8B8] hover:border-[rgba(177,0,255,0.32)] hover:text-white"
-              }`}
-            >
-              {filter}
-            </button>
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {games.map((game, index) => (
+            <FeaturedGameCard key={game.id} game={game} index={index} />
           ))}
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeFilter}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.28 }}
-            className="grid gap-4 md:grid-cols-2 lg:grid-cols-5"
-          >
-            {filteredGames.map((game, index) => {
-              const status = conceptStatusMap[game.status];
+        <div className="mt-12 grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              icon: Layers3,
+              title: "Game Integration",
+              text: "Approved game worlds can connect through a future structured ecosystem layer.",
+            },
+            {
+              icon: Trophy,
+              title: "Tournament Framework",
+              text: "Competitive formats, brackets, and seasonal concepts are part of the future roadmap.",
+            },
+            {
+              icon: Wallet,
+              title: "Wallet & Escrow",
+              text: "Selected match flows can connect to planned wallet and escrow systems after launch.",
+            },
+          ].map((item) => {
+            const Icon = item.icon;
 
-              return (
-                <motion.article
-                  key={game.id}
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: index * 0.04 }}
-                  className="group overflow-hidden rounded-[18px] border border-[rgba(177,0,255,0.15)] bg-[rgba(10,10,16,0.82)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(177,0,255,0.35)] hover:shadow-[0_0_30px_rgba(177,0,255,0.14)]"
-                >
-                  <div className="relative h-[190px] overflow-hidden">
-                    <div
-                      className="absolute inset-0 bg-[#11111A] transition-transform duration-700 group-hover:scale-105"
-                      style={{
-                        backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.9),rgba(5,5,5,0.08)), url('${game.image}')`,
-                        backgroundPosition: "center",
-                        backgroundSize: "cover",
-                      }}
-                    />
+            return (
+              <div
+                key={item.title}
+                className="rounded-[26px] border border-[rgba(168,85,247,0.14)] bg-[rgba(10,10,16,0.58)] p-5 backdrop-blur-xl"
+              >
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.1)] text-[#C9A7FF]">
+                  <Icon className="h-5 w-5" />
+                </div>
 
-                    <div className="absolute left-3 top-3">
-                      <span
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${status.className}`}
-                      >
-                        <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                        {status.label}
-                      </span>
-                    </div>
-
-                    <div className="absolute right-3 top-3 rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(5,5,5,0.48)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#CFCFE1] backdrop-blur-md">
-                      Concept Art
-                    </div>
-
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#A8A8B8]">
-                        {game.genre} World
-                      </p>
-
-                      <h3
-                        className="text-base font-black uppercase tracking-[0.04em] text-white"
-                        style={{ fontFamily: "var(--font-display)" }}
-                      >
-                        {game.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  <div className="p-3.5">
-                    <p className="mb-3 line-clamp-2 min-h-[40px] text-xs leading-5 text-[#A8A8B8]">
-                      {game.shortDescription}
-                    </p>
-
-                    <div className="mb-3 flex flex-wrap gap-1.5">
-                      {game.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-md border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-2 py-1 text-[10px] text-[#A8A8B8]"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <div className="rounded-xl border border-[rgba(177,0,255,0.11)] bg-[rgba(255,255,255,0.025)] p-2">
-                        <p className="text-[10px] uppercase tracking-[0.1em] text-[#77778B]">
-                          Mode
-                        </p>
-                        <p className="mt-1 text-xs font-semibold text-white">
-                          {game.playerMode}
-                        </p>
-                      </div>
-
-                      <div className="rounded-xl border border-[rgba(177,0,255,0.11)] bg-[rgba(255,255,255,0.025)] p-2">
-                        <p className="text-[10px] uppercase tracking-[0.1em] text-[#77778B]">
-                          Support
-                        </p>
-                        <p className="mt-1 text-xs font-semibold text-white">
-                          Future
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-3">
-                      <Link
-                        href={`/games/${game.slug}`}
-                        className="inline-flex items-center gap-2 rounded-lg border border-[rgba(177,0,255,0.2)] bg-[rgba(177,0,255,0.08)] px-3 py-2 text-xs font-semibold text-white transition-all hover:border-[rgba(177,0,255,0.4)]"
-                      >
-                        <Eye className="h-3.5 w-3.5 text-[#D447FF]" />
-                        Preview World
-                      </Link>
-
-                      <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[rgba(177,0,255,0.18)] bg-[rgba(177,0,255,0.06)] text-[#D447FF] transition-all hover:border-[rgba(177,0,255,0.36)] hover:text-white">
-                        <Bell className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.article>
-              );
-            })}
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="mt-5 rounded-[20px] border border-[rgba(177,0,255,0.16)] bg-[rgba(177,0,255,0.06)] px-5 py-4">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(177,0,255,0.13)] text-[#D447FF]">
-                <Gamepad2 className="h-4 w-4" />
-              </div>
-
-              <div>
-                <p className="text-sm font-semibold text-white">
-                  Concept visuals only
-                </p>
-                <p className="mt-1 max-w-3xl text-xs leading-6 text-[#A8A8B8]">
-                  These game worlds are designed to preview the type of competitive
-                  experiences NexusWager may support. They are not live playable
-                  titles yet. Real partner titles will be announced as development,
-                  licensing, onboarding, and integration progress.
+                <h3 className="font-black text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/55">
+                  {item.text}
                 </p>
               </div>
-            </div>
-
-            <Link
-              href="#waitlist"
-              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[#B100FF] to-[#D447FF] px-4 py-2.5 text-xs font-bold text-white shadow-[0_0_24px_rgba(177,0,255,0.18)]"
-            >
-              Join Waitlist
-            </Link>
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>

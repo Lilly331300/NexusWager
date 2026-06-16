@@ -36,7 +36,7 @@ export const games: Game[] = [
     genre: "Action",
     status: "coming-soon",
     description:
-      "A futuristic tactical action concept designed for skill-based competitive sessions, structured match rules, escrow-backed competition flow, and future anti-cheat validation.",
+      "A futuristic tactical action concept designed for skill-based competitive sessions, structured match rules, escrow-backed competition flow, and future anti-cheat validation inside the NexusWager ecosystem.",
     shortDescription:
       "A tactical sci-fi action concept built for future competitive matchmaking.",
     developer: "Void Dynamics",
@@ -49,7 +49,11 @@ export const games: Game[] = [
     rating: 0,
     players: 0,
     image: "/assets/games/nebula-strike.jpg",
-    screenshots: [],
+    screenshots: [
+      "/assets/games/nebula-strike-1.jpg",
+      "/assets/games/nebula-strike-2.jpg",
+      "/assets/games/nebula-strike.jpg",
+    ],
     features: [
       "Skill-Based Matchmaking",
       "Escrow Flow Planned",
@@ -63,7 +67,7 @@ export const games: Game[] = [
       "Practice Mode",
     ],
     leaderboardPreview: [],
-    relatedGames: ["quantum-racer", "cyber-arena"],
+    relatedGames: ["quantum-racer", "cyber-arena", "void-horizon"],
   },
   {
     id: "2",
@@ -85,7 +89,11 @@ export const games: Game[] = [
     rating: 0,
     players: 0,
     image: "/assets/games/quantum-racer.jpg",
-    screenshots: [],
+    screenshots: [
+      "/assets/games/quantum-racer-1.jpg",
+      "/assets/games/quantum-racer-2.jpg",
+      "/assets/games/quantum-racer.jpg",
+    ],
     features: [
       "Time Trial Framework",
       "Seasonal Event Concept",
@@ -99,7 +107,7 @@ export const games: Game[] = [
       "Daily Challenge",
     ],
     leaderboardPreview: [],
-    relatedGames: ["nebula-strike", "arena-tactics"],
+    relatedGames: ["nebula-strike", "arena-tactics", "grid-iron-pro"],
   },
   {
     id: "3",
@@ -108,7 +116,7 @@ export const games: Game[] = [
     genre: "Strategy",
     status: "partner-preview",
     description:
-      "A turn-based tactical strategy concept where players command squads in competitive arena scenarios, with planned support for ranked seasons and structured tournament play.",
+      "A turn-based tactical strategy concept where players command squads in competitive arena scenarios, with planned support for ranked seasons, structured tournament play, and future partner integration.",
     shortDescription:
       "Turn-based squad strategy concept for tactical competitive sessions.",
     developer: "Strategic Minds Studio",
@@ -121,7 +129,11 @@ export const games: Game[] = [
     rating: 0,
     players: 0,
     image: "/assets/games/arena-tactics.jpg",
-    screenshots: [],
+    screenshots: [
+      "/assets/games/arena-tactics-1.jpg",
+      "/assets/games/arena-tactics-2.jpg",
+      "/assets/games/arena-tactics.jpg",
+    ],
     features: [
       "Squad Command",
       "Ranked Season Concept",
@@ -134,7 +146,7 @@ export const games: Game[] = [
       "Tournament Bracket Concept",
     ],
     leaderboardPreview: [],
-    relatedGames: ["nebula-strike", "cyber-arena"],
+    relatedGames: ["nebula-strike", "cyber-arena", "void-horizon"],
   },
   {
     id: "4",
@@ -156,7 +168,11 @@ export const games: Game[] = [
     rating: 0,
     players: 0,
     image: "/assets/games/cyber-arena.jpg",
-    screenshots: [],
+    screenshots: [
+      "/assets/games/cyber-arena-1.jpg",
+      "/assets/games/cyber-arena-2.jpg",
+      "/assets/games/cyber-arena.jpg",
+    ],
     features: [
       "Dynamic Arena Concept",
       "Character Customization",
@@ -169,7 +185,7 @@ export const games: Game[] = [
       "Tournament Mode Concept",
     ],
     leaderboardPreview: [],
-    relatedGames: ["nebula-strike", "arena-tactics"],
+    relatedGames: ["nebula-strike", "arena-tactics", "quantum-racer"],
   },
   {
     id: "5",
@@ -191,7 +207,11 @@ export const games: Game[] = [
     rating: 0,
     players: 0,
     image: "/assets/games/grid-iron-pro.jpg",
-    screenshots: [],
+    screenshots: [
+      "/assets/games/grid-iron-pro-1.jpg",
+      "/assets/games/grid-iron-pro-2.jpg",
+      "/assets/games/grid-iron-pro.jpg",
+    ],
     features: [
       "Physics-Based Play Concept",
       "Seasonal League Framework",
@@ -204,7 +224,7 @@ export const games: Game[] = [
       "Casual Match Concept",
     ],
     leaderboardPreview: [],
-    relatedGames: ["quantum-racer", "cyber-arena"],
+    relatedGames: ["quantum-racer", "cyber-arena", "arena-tactics"],
   },
   {
     id: "6",
@@ -226,7 +246,11 @@ export const games: Game[] = [
     rating: 0,
     players: 0,
     image: "/assets/games/void-horizon.jpg",
-    screenshots: [],
+    screenshots: [
+      "/assets/games/void-horizon-1.jpg",
+      "/assets/games/void-horizon-2.jpg",
+      "/assets/games/void-horizon.jpg",
+    ],
     features: [
       "Resource Management",
       "Territorial Control",
@@ -239,7 +263,7 @@ export const games: Game[] = [
       "Seasonal Campaign",
     ],
     leaderboardPreview: [],
-    relatedGames: ["arena-tactics", "nebula-strike"],
+    relatedGames: ["arena-tactics", "nebula-strike", "quantum-racer"],
   },
 ];
 
