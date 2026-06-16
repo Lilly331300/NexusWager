@@ -17,14 +17,17 @@ import GlowButton from "@/components/shared/GlowButton";
 
 const mainFootballer = "/assets/hero/hero-character-football.png";
 const supportingFootballers = "/assets/hero/hero-footballer-support.png";
-const stadiumImage = "/assets/hero/nexus-football-stadium-bg.webp";
+const stadiumImage = "/assets/hero/nexus-stadium-natural-poster.jpg";
+const stadiumVideo = "/assets/hero/nexus-stadium-natural.mp4";
+const fallbackStadiumImage = "/assets/hero/nexus-football-stadium-bg.webp";
+const fallbackCinematicImage = "/assets/hero/nexus-hero-cinematic-bg.webp";
 const communityImage = "/assets/news/community.jpg";
 const controllerImage = "/assets/ui/final-cta-controller.webp";
 
 const features = [
   { icon: Zap, label: "Skill-Based Matchmaking" },
-  { icon: Shield, label: "Secure Escrow" },
-  { icon: Wallet, label: "Multi-Coin Wallet" },
+  { icon: Shield, label: "Secure Match Flow" },
+  { icon: Wallet, label: "Wallet Layer" },
   { icon: Layers3, label: "Tournament Framework" },
   { icon: Users, label: "Gaming Community" },
   { icon: Code, label: "Partner Game Pipeline" },
@@ -54,6 +57,12 @@ const particles = Array.from({ length: 16 }, (_, index) => ({
   top: `${10 + ((index * 23) % 74)}%`,
   delay: index * 0.16,
   duration: 3.1 + (index % 5) * 0.42,
+  color:
+    index % 3 === 0
+      ? "rgba(34,211,238,0.72)"
+      : index % 3 === 1
+        ? "rgba(52,211,153,0.62)"
+        : "rgba(251,191,36,0.58)",
 }));
 
 const featureCardHover = {
@@ -83,38 +92,41 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[880px] overflow-hidden pt-24 pb-14 lg:pt-28 lg:pb-16">
-      <div className="absolute inset-0 bg-[#050505]" />
+      <div className="absolute inset-0 bg-[#050607]" />
 
+      {/* Natural stadium fallback background */}
       <div
-        className="absolute inset-0 scale-[1.04] opacity-[0.62]"
+        className="absolute inset-0 scale-[1.04] opacity-[0.78]"
         style={{
-          backgroundImage:
-            "url('/assets/hero/nexus-football-stadium-bg.webp'), url('/assets/hero/nexus-hero-cinematic-bg.webp'), url('/assets/hero/hero-bg-overlay.webp')",
+          backgroundImage: `url('${stadiumImage}'), url('${fallbackStadiumImage}'), url('${fallbackCinematicImage}')`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
       />
 
+      {/* Natural stadium video background */}
       <video
-        className="absolute inset-0 h-full w-full object-cover opacity-[0.24]"
+        className="absolute inset-0 h-full w-full object-cover opacity-[0.42]"
         autoPlay
         muted
         loop
         playsInline
-        poster="/assets/hero/nexus-football-stadium-bg.webp"
+        poster={stadiumImage}
       >
-        <source src="/assets/hero/nexus-football-hero-loop.mp4" type="video/mp4" />
+        <source src={stadiumVideo} type="video/mp4" />
       </video>
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_22%,rgba(120,70,180,0.16),transparent_30%),radial-gradient(circle_at_78%_28%,rgba(168,85,247,0.18),transparent_30%),radial-gradient(circle_at_65%_82%,rgba(75,45,120,0.14),transparent_30%),linear-gradient(180deg,rgba(5,5,5,0.72)_0%,rgba(5,5,5,0.33)_44%,rgba(5,5,5,0.96)_100%)]" />
+      {/* Natural cinematic overlays — less purple, more stadium blue/green/gold */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(34,211,238,0.16),transparent_31%),radial-gradient(circle_at_78%_24%,rgba(52,211,153,0.1),transparent_32%),radial-gradient(circle_at_64%_82%,rgba(251,191,36,0.1),transparent_30%),linear-gradient(180deg,rgba(5,6,7,0.72)_0%,rgba(5,6,7,0.34)_43%,rgba(5,6,7,0.96)_100%)]" />
 
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,5,5,0.74)_0%,rgba(5,5,5,0.42)_45%,rgba(5,5,5,0.22)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,6,7,0.82)_0%,rgba(5,6,7,0.52)_43%,rgba(5,6,7,0.28)_100%)]" />
 
+      {/* Soft light sweeps */}
       <motion.div
         aria-hidden
         animate={{ x: ["-25%", "125%"] }}
         transition={{ duration: 8.5, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[19%] h-px w-[34%] bg-gradient-to-r from-transparent via-[rgba(190,150,255,0.38)] to-transparent blur-[1px]"
+        className="absolute top-[19%] h-px w-[34%] bg-gradient-to-r from-transparent via-cyan-200/40 to-transparent blur-[1px]"
       />
 
       <motion.div
@@ -126,17 +138,22 @@ export default function Hero() {
           ease: "linear",
           delay: 1.1,
         }}
-        className="absolute bottom-[24%] h-px w-[40%] bg-gradient-to-r from-transparent via-[rgba(168,85,247,0.32)] to-transparent blur-[1px]"
+        className="absolute bottom-[24%] h-px w-[40%] bg-gradient-to-r from-transparent via-emerald-200/28 to-transparent blur-[1px]"
       />
 
       <div className="pointer-events-none absolute inset-0">
         {particles.map((particle) => (
           <motion.span
             key={particle.id}
-            className="absolute h-1 w-1 rounded-full bg-[#B98CFF] shadow-[0_0_10px_rgba(185,140,255,0.75)]"
-            style={{ left: particle.left, top: particle.top }}
+            className="absolute h-1 w-1 rounded-full"
+            style={{
+              left: particle.left,
+              top: particle.top,
+              backgroundColor: particle.color,
+              boxShadow: `0 0 10px ${particle.color}`,
+            }}
             animate={{
-              opacity: [0.05, 0.55, 0.05],
+              opacity: [0.05, 0.5, 0.05],
               scale: [0.55, 1.25, 0.55],
               y: [0, -16, 0],
             }}
@@ -150,7 +167,7 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(168,85,247,0.28)] to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-300/32 to-transparent" />
 
       <div className="container-narrow relative z-10">
         <div className="grid min-h-[755px] items-center gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-12">
@@ -163,15 +180,15 @@ export default function Hero() {
             <motion.div
               animate={{
                 boxShadow: [
-                  "0 0 14px rgba(168,85,247,0.1)",
-                  "0 0 28px rgba(168,85,247,0.22)",
-                  "0 0 14px rgba(168,85,247,0.1)",
+                  "0 0 14px rgba(34,211,238,0.08)",
+                  "0 0 28px rgba(34,211,238,0.2)",
+                  "0 0 14px rgba(34,211,238,0.08)",
                 ],
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="mb-5 inline-flex items-center gap-2 rounded-full border border-[rgba(168,85,247,0.28)] bg-[rgba(168,85,247,0.1)] px-4 py-2 text-sm font-semibold text-[#C9A7FF] backdrop-blur-xl"
+              className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/[0.08] px-4 py-2 text-sm font-semibold text-cyan-100 backdrop-blur-xl"
             >
-              <span className="h-2 w-2 rounded-full bg-[#C9A7FF] shadow-[0_0_12px_rgba(201,167,255,0.75)]" />
+              <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.75)]" />
               Competitive Gaming Ecosystem
             </motion.div>
 
@@ -180,13 +197,13 @@ export default function Hero() {
               style={{ fontFamily: "var(--font-display)" }}
             >
               The Future of{" "}
-              <span className="bg-gradient-to-r from-[#C9A7FF] via-[#A855F7] to-[#E9D5FF] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-200 via-emerald-200 to-amber-200 bg-clip-text text-transparent">
                 Competitive Gaming
               </span>{" "}
               Is Coming
             </h1>
 
-            <p className="mt-6 max-w-[590px] text-sm leading-7 text-[#C9C9D4] sm:text-base md:text-lg">
+            <p className="mt-6 max-w-[590px] text-sm leading-7 text-[#C9D2D8] sm:text-base md:text-lg">
               NexusWager is building a connected competitive gaming ecosystem
               where players discover game worlds, challenge opponents, compete
               securely, manage wallet balances, and join a growing community of
@@ -194,7 +211,11 @@ export default function Hero() {
             </p>
 
             <div className="mt-7 flex flex-col gap-4 sm:flex-row">
-              <GlowButton href="#waitlist" size="lg" className="min-w-[190px]">
+              <GlowButton
+                href="#waitlist"
+                size="lg"
+                className="min-w-[190px] !bg-none bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-200 !text-black hover:shadow-[0_0_44px_rgba(34,211,238,0.26)]"
+              >
                 Join Waitlist
                 <ChevronRight className="h-5 w-5" />
               </GlowButton>
@@ -203,7 +224,7 @@ export default function Hero() {
                 href="/partners"
                 variant="outline"
                 size="lg"
-                className="min-w-[190px]"
+                className="min-w-[190px] !border-cyan-300/38 !text-cyan-100 hover:!border-cyan-200/70 hover:!bg-cyan-300/[0.08] hover:!text-white hover:shadow-[0_0_26px_rgba(34,211,238,0.14)]"
               >
                 Become a Partner
               </GlowButton>
@@ -223,13 +244,13 @@ export default function Hero() {
                       delay: 0.34 + index * 0.055,
                     }}
                     whileHover={featureCardHover}
-                    className="group relative cursor-pointer rounded-2xl border border-[rgba(168,85,247,0.12)] bg-[rgba(10,10,16,0.5)] px-3 py-3 backdrop-blur-xl transition-all duration-300 hover:border-[rgba(168,85,247,0.32)] hover:bg-[rgba(168,85,247,0.09)] hover:shadow-[0_0_30px_rgba(168,85,247,0.14)]"
+                    className="group relative cursor-pointer rounded-2xl border border-cyan-300/10 bg-[rgba(8,18,22,0.46)] px-3 py-3 backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/30 hover:bg-cyan-300/[0.075] hover:shadow-[0_0_30px_rgba(34,211,238,0.12)]"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(168,85,247,0.11)] text-[#C9A7FF]">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cyan-300/[0.1] text-cyan-200">
                         <Icon className="h-4 w-4" />
                       </div>
-                      <span className="text-[12px] leading-4 text-[#D6D6E5]">
+                      <span className="text-[12px] leading-4 text-[#D9E3E8]">
                         {feature.label}
                       </span>
                     </div>
@@ -238,14 +259,13 @@ export default function Hero() {
               })}
             </div>
 
-            <div className="mt-8 overflow-hidden rounded-[24px] border border-[rgba(168,85,247,0.18)] bg-[rgba(10,10,16,0.72)] p-3 shadow-[0_0_36px_rgba(168,85,247,0.08)] backdrop-blur-xl lg:hidden">
+            <div className="mt-8 overflow-hidden rounded-[24px] border border-cyan-300/16 bg-[rgba(8,18,22,0.64)] p-3 shadow-[0_0_36px_rgba(34,211,238,0.08)] backdrop-blur-xl lg:hidden">
               <motion.div
                 animate={{ scale: [1, 1.035, 1] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 className="h-[245px] rounded-[18px] bg-[#11111A]"
                 style={{
-                  backgroundImage:
-                    "linear-gradient(to top,rgba(5,5,5,0.76),rgba(5,5,5,0.08)), url('/assets/hero/nexus-football-stadium-bg.webp')",
+                  backgroundImage: `linear-gradient(to top,rgba(5,6,7,0.76),rgba(5,6,7,0.08)), url('${stadiumImage}'), url('${fallbackStadiumImage}')`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -268,17 +288,17 @@ export default function Hero() {
                 aria-hidden
                 animate={{ rotate: 360 }}
                 transition={{ duration: 48, repeat: Infinity, ease: "linear" }}
-                className="absolute left-[17%] top-[7%] h-[580px] w-[580px] rounded-full border border-[rgba(168,85,247,0.1)]"
+                className="absolute left-[17%] top-[7%] h-[580px] w-[580px] rounded-full border border-cyan-300/10"
               />
 
               <motion.div
                 aria-hidden
                 animate={{ rotate: -360 }}
                 transition={{ duration: 62, repeat: Infinity, ease: "linear" }}
-                className="absolute right-[3%] top-[10%] h-[500px] w-[500px] rounded-full border border-dashed border-[rgba(201,167,255,0.1)]"
+                className="absolute right-[3%] top-[10%] h-[500px] w-[500px] rounded-full border border-dashed border-emerald-200/10"
               />
 
-              <div className="absolute left-[60%] top-[54%] h-[760px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.2),rgba(168,85,247,0.05),transparent_68%)] blur-2xl" />
+              <div className="absolute left-[60%] top-[54%] h-[760px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.16),rgba(52,211,153,0.05),transparent_68%)] blur-2xl" />
 
               <motion.div
                 aria-hidden
@@ -298,6 +318,7 @@ export default function Hero() {
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center bottom",
                   backgroundSize: "auto 100%",
+                  filter: "drop-shadow(0 0 34px rgba(34,211,238,0.16))",
                 }}
               />
 
@@ -313,7 +334,7 @@ export default function Hero() {
                 }}
                 className="pointer-events-none absolute right-[-180px] bottom-[-118px] z-30 h-[930px] w-[760px]"
               >
-                <div className="absolute inset-x-12 bottom-[58px] h-[140px] rounded-full bg-[radial-gradient(ellipse,rgba(168,85,247,0.25),transparent_68%)] blur-xl" />
+                <div className="absolute inset-x-12 bottom-[58px] h-[140px] rounded-full bg-[radial-gradient(ellipse,rgba(34,211,238,0.18),transparent_68%)] blur-xl" />
 
                 <div
                   className="relative z-10 h-full w-full"
@@ -322,7 +343,8 @@ export default function Hero() {
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center bottom",
                     backgroundSize: "auto 100%",
-                    filter: "drop-shadow(0 0 56px rgba(168,85,247,0.34))",
+                    filter:
+                      "drop-shadow(0 0 44px rgba(34,211,238,0.2)) drop-shadow(0 0 26px rgba(251,191,36,0.1))",
                   }}
                 />
               </motion.div>
@@ -343,7 +365,7 @@ export default function Hero() {
                     stiffness: 230,
                     damping: 19,
                   }}
-                  className="absolute left-0 top-0 z-[65] w-[455px] cursor-pointer overflow-hidden rounded-[30px] border border-[rgba(168,85,247,0.22)] bg-[rgba(10,10,16,0.78)] p-5 shadow-[0_0_50px_rgba(168,85,247,0.12)] backdrop-blur-xl"
+                  className="absolute left-0 top-0 z-[65] w-[455px] cursor-pointer overflow-hidden rounded-[30px] border border-cyan-300/18 bg-[rgba(7,16,20,0.78)] p-5 shadow-[0_0_50px_rgba(34,211,238,0.1)] backdrop-blur-xl"
                 >
                   <motion.div
                     animate={{ y: [0, -9, 0], rotate: [0, -0.6, 0] }}
@@ -355,7 +377,7 @@ export default function Hero() {
                   >
                     <div className="mb-4 flex items-center justify-between">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.16em] text-[#8F8FA3]">
+                        <p className="text-xs uppercase tracking-[0.16em] text-[#8BA1AA]">
                           Nexus Command
                         </p>
                         <h3 className="mt-2 text-xl font-bold text-white">
@@ -363,15 +385,15 @@ export default function Hero() {
                         </h3>
                       </div>
 
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(168,85,247,0.12)] text-[#C9A7FF]">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-300/[0.1] text-cyan-200">
                         <Gamepad2 className="h-5 w-5" />
                       </div>
                     </div>
 
                     <div
-                      className="mb-4 h-[180px] rounded-2xl border border-[rgba(168,85,247,0.12)] bg-[#11111A]"
+                      className="mb-4 h-[180px] rounded-2xl border border-cyan-300/12 bg-[#11111A]"
                       style={{
-                        backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.72),rgba(5,5,5,0.08)), url('${controllerImage}')`,
+                        backgroundImage: `linear-gradient(to top,rgba(5,6,7,0.72),rgba(5,6,7,0.08)), url('${controllerImage}')`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                       }}
@@ -382,15 +404,15 @@ export default function Hero() {
                         <motion.div
                           key={item.title}
                           whileHover={featureCardHover}
-                          className="cursor-pointer rounded-2xl border border-[rgba(168,85,247,0.1)] bg-[rgba(255,255,255,0.025)] p-3 transition-all duration-300 hover:border-[rgba(168,85,247,0.28)] hover:bg-[rgba(168,85,247,0.07)]"
+                          className="cursor-pointer rounded-2xl border border-cyan-300/10 bg-white/[0.025] p-3 transition-all duration-300 hover:border-cyan-300/28 hover:bg-cyan-300/[0.065]"
                         >
-                          <p className="text-[10px] uppercase tracking-[0.12em] text-[#77778B]">
+                          <p className="text-[10px] uppercase tracking-[0.12em] text-[#7D939B]">
                             {item.label}
                           </p>
                           <p className="mt-1 text-xs font-semibold text-white">
                             {item.title}
                           </p>
-                          <p className="mt-2 text-[11px] font-semibold text-[#C9A7FF]">
+                          <p className="mt-2 text-[11px] font-semibold text-cyan-200">
                             {item.value}
                           </p>
                         </motion.div>
@@ -410,7 +432,7 @@ export default function Hero() {
                     stiffness: 230,
                     damping: 19,
                   }}
-                  className="absolute right-0 top-[38px] z-[72] w-[290px] cursor-pointer rounded-[28px] border border-[rgba(168,85,247,0.22)] bg-[rgba(10,10,16,0.9)] p-5 shadow-[0_0_40px_rgba(168,85,247,0.12)] backdrop-blur-xl"
+                  className="absolute right-0 top-[38px] z-[72] w-[290px] cursor-pointer rounded-[28px] border border-emerald-300/18 bg-[rgba(7,16,20,0.9)] p-5 shadow-[0_0_40px_rgba(52,211,153,0.1)] backdrop-blur-xl"
                 >
                   <motion.div
                     animate={{ y: [0, 9, 0], rotate: [0, 0.8, 0] }}
@@ -422,18 +444,18 @@ export default function Hero() {
                     }}
                   >
                     <div className="mb-4 flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-[0.16em] text-[#8F8FA3]">
+                      <span className="text-xs uppercase tracking-[0.16em] text-[#8BA1AA]">
                         Nexus Wallet
                       </span>
 
                       <motion.span
                         animate={{ opacity: [0.25, 0.85, 0.25] }}
                         transition={{ duration: 1.8, repeat: Infinity }}
-                        className="h-2 w-2 rounded-full bg-[#C9A7FF] shadow-[0_0_10px_rgba(201,167,255,0.75)]"
+                        className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.75)]"
                       />
                     </div>
 
-                    <p className="text-[11px] text-[#77778B]">Preview Balance</p>
+                    <p className="text-[11px] text-[#7D939B]">Preview Balance</p>
                     <p className="mt-1 text-2xl font-bold text-white">12,450.85 NXC</p>
 
                     <div className="mt-5 space-y-2">
@@ -445,9 +467,9 @@ export default function Hero() {
                         <motion.div
                           key={label}
                           whileHover={featureCardHover}
-                          className="flex cursor-pointer items-center justify-between rounded-xl border border-[rgba(168,85,247,0.1)] bg-[rgba(255,255,255,0.03)] px-3 py-2 transition-all duration-300 hover:border-[rgba(168,85,247,0.24)] hover:bg-[rgba(168,85,247,0.06)]"
+                          className="flex cursor-pointer items-center justify-between rounded-xl border border-emerald-300/10 bg-white/[0.03] px-3 py-2 transition-all duration-300 hover:border-emerald-300/24 hover:bg-emerald-300/[0.06]"
                         >
-                          <span className="text-xs text-[#A8A8B8]">{label}</span>
+                          <span className="text-xs text-[#B8C6CC]">{label}</span>
                           <span className="text-xs font-semibold text-white">{amount}</span>
                         </motion.div>
                       ))}
@@ -466,7 +488,7 @@ export default function Hero() {
                     stiffness: 230,
                     damping: 19,
                   }}
-                  className="absolute left-[72px] bottom-[8px] z-[70] w-[350px] cursor-pointer overflow-hidden rounded-[28px] border border-[rgba(168,85,247,0.22)] bg-[rgba(10,10,16,0.84)] p-4 shadow-[0_0_40px_rgba(168,85,247,0.12)] backdrop-blur-xl"
+                  className="absolute left-[72px] bottom-[8px] z-[70] w-[350px] cursor-pointer overflow-hidden rounded-[28px] border border-cyan-300/18 bg-[rgba(7,16,20,0.84)] p-4 shadow-[0_0_40px_rgba(34,211,238,0.1)] backdrop-blur-xl"
                 >
                   <motion.div
                     animate={{ y: [0, 8, 0], rotate: [0, 0.7, 0] }}
@@ -478,20 +500,20 @@ export default function Hero() {
                     }}
                   >
                     <div
-                      className="relative h-[175px] overflow-hidden rounded-2xl border border-[rgba(168,85,247,0.12)] bg-[#11111A]"
+                      className="relative h-[175px] overflow-hidden rounded-2xl border border-cyan-300/12 bg-[#11111A]"
                       style={{
-                        backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.74),rgba(5,5,5,0.12)), url('${communityImage}')`,
+                        backgroundImage: `linear-gradient(to top,rgba(5,6,7,0.74),rgba(5,6,7,0.12)), url('${communityImage}')`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                       }}
                     >
-                      <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-[rgba(168,85,247,0.2)] bg-[rgba(5,5,5,0.42)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#C9A7FF] backdrop-blur-md">
+                      <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-cyan-300/20 bg-[rgba(5,6,7,0.42)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100 backdrop-blur-md">
                         <Users className="h-3 w-3" />
                         Community
                       </div>
 
                       <div className="absolute bottom-3 left-3 right-3">
-                        <p className="text-xs uppercase tracking-[0.14em] text-[#BFB5D8]">
+                        <p className="text-xs uppercase tracking-[0.14em] text-[#BFEAF5]">
                           Community Layer
                         </p>
                         <p className="mt-1 text-lg font-bold text-white">
@@ -505,12 +527,12 @@ export default function Hero() {
                         <p className="text-xs font-semibold text-white">
                           Built for ecosystem growth
                         </p>
-                        <p className="mt-1 text-[11px] text-[#8F8FA3]">
+                        <p className="mt-1 text-[11px] text-[#8BA1AA]">
                           Community rooms, updates, and partner visibility
                         </p>
                       </div>
 
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(168,85,247,0.12)] text-[#C9A7FF]">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-300/[0.1] text-cyan-200">
                         <Users className="h-4 w-4" />
                       </div>
                     </div>
@@ -528,7 +550,7 @@ export default function Hero() {
                     stiffness: 230,
                     damping: 19,
                   }}
-                  className="absolute right-[28px] bottom-[26px] z-[68] w-[310px] cursor-pointer overflow-hidden rounded-[28px] border border-[rgba(168,85,247,0.22)] bg-[rgba(10,10,16,0.84)] p-4 shadow-[0_0_40px_rgba(168,85,247,0.12)] backdrop-blur-xl"
+                  className="absolute right-[28px] bottom-[26px] z-[68] w-[310px] cursor-pointer overflow-hidden rounded-[28px] border border-amber-200/18 bg-[rgba(7,16,20,0.84)] p-4 shadow-[0_0_40px_rgba(251,191,36,0.08)] backdrop-blur-xl"
                 >
                   <motion.div
                     animate={{ y: [0, -8, 0], rotate: [0, -0.7, 0] }}
@@ -540,20 +562,20 @@ export default function Hero() {
                     }}
                   >
                     <div
-                      className="relative h-[150px] overflow-hidden rounded-2xl border border-[rgba(168,85,247,0.12)] bg-[#11111A]"
+                      className="relative h-[150px] overflow-hidden rounded-2xl border border-amber-200/12 bg-[#11111A]"
                       style={{
-                        backgroundImage: `linear-gradient(to top,rgba(5,5,5,0.7),rgba(5,5,5,0.1)), url('${controllerImage}')`,
+                        backgroundImage: `linear-gradient(to top,rgba(5,6,7,0.7),rgba(5,6,7,0.1)), url('${controllerImage}')`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                       }}
                     >
-                      <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-[rgba(168,85,247,0.2)] bg-[rgba(5,5,5,0.42)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#C9A7FF] backdrop-blur-md">
+                      <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-amber-200/20 bg-[rgba(5,6,7,0.42)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-100 backdrop-blur-md">
                         <Sparkles className="h-3 w-3" />
                         Access
                       </div>
 
                       <div className="absolute bottom-3 left-3 right-3">
-                        <p className="text-xs uppercase tracking-[0.14em] text-[#BFB5D8]">
+                        <p className="text-xs uppercase tracking-[0.14em] text-amber-100">
                           Game Access
                         </p>
                         <p className="mt-1 text-base font-bold text-white">
@@ -567,12 +589,12 @@ export default function Hero() {
                         <p className="text-xs font-semibold text-white">
                           Designed for future play
                         </p>
-                        <p className="mt-1 text-[11px] text-[#8F8FA3]">
+                        <p className="mt-1 text-[11px] text-[#8BA1AA]">
                           Game discovery, access, and ecosystem utility
                         </p>
                       </div>
 
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(168,85,247,0.12)] text-[#C9A7FF]">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-200/[0.1] text-amber-100">
                         <Gamepad2 className="h-4 w-4" />
                       </div>
                     </div>
@@ -580,7 +602,7 @@ export default function Hero() {
                 </motion.div>
               </div>
 
-              <div className="absolute bottom-0 left-[260px] h-[120px] w-[460px] rounded-full bg-[radial-gradient(ellipse,rgba(168,85,247,0.24),transparent_66%)] blur-xl" />
+              <div className="absolute bottom-0 left-[260px] h-[120px] w-[460px] rounded-full bg-[radial-gradient(ellipse,rgba(34,211,238,0.18),transparent_66%)] blur-xl" />
             </div>
           </motion.div>
         </div>
